@@ -14,6 +14,16 @@ class MahasiswaSeeder extends Seeder
 
         $data = [
             [
+                'nama' => 'Zayyan Fadhlur Rahman', 
+                'nim' => '3337250010', 
+                'ipk' => 4.00,
+                'prodi' => 'Informatika', 
+                'angkatan' => 2025,
+                'email' => 'fadhlurrahmanzayyan@gmail.com', 
+                'github' => 'github.com/zayyanfr',
+                'bio' => 'Mahasiswa Informatika UNTIRTA yang semangat belajar Laravel.'
+            ],
+            [
                 'nama' => 'Budi Santoso', 'nim' => '3411221001', 'ipk' => 3.85,
                 'prodi' => 'Informatika', 'angkatan' => 2022,
                 'email' => 'budi@example.com', 'github' => 'github.com/budi',
