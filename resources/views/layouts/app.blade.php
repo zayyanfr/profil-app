@@ -16,10 +16,26 @@
 <body>
     <nav class='navbar'>
         <span>Pemrograman Web – UNTIRTA</span>
-        <a href="{{ route('profil') }}">Profil Saya</a>
+        <a href="{{ route('mahasiswas.index') }}">Profil Saya</a>
     </nav>
 
     <div class='container'>
+        {{-- Flash message sukses --}}
+        @if(session('success'))
+            <div style='background:#dcfce7; color:#166534; border:1px solid #86efac; padding:14px; border-radius:8px; margin-bottom:16px; display:flex; align-items:center; gap:8px;'>
+                <span style='font-size:18px; font-weight: bold;'>✓</span>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
+        {{-- Flash message error --}}
+        @if(session('error'))
+            <div style='background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; padding:14px; border-radius:8px; margin-bottom:16px;'>
+                ⚠️ {{ session('error') }}
+            </div>
+        @endif
+
+        {{-- Halaman konten anak akan dirender di sini --}}
         @yield('content')
     </div>
 

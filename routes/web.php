@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\TentangController;
 
 // Route bawaan Laravel (biarkan tetap ada)
@@ -10,8 +10,6 @@ Route::get('/', function () {
 });
 
 // Route baru yang kita tambahkan
-Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
-
-Route::get('/mahasiswa/{id}', [ProfilController::class, 'show'])->name('mahasiswa.show');
+Route::resource('mahasiswas', MahasiswaController::class);
 
 Route::get('/tentang', [TentangController::class, 'index'])->name('tentang');
