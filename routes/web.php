@@ -1,15 +1,25 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MahasiswaController; // <-- Pastikan ini ada
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MahasiswaController;
-use App\Http\Controllers\TentangController;
 
-// Route bawaan Laravel (biarkan tetap ada)
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Route baru yang kita tambahkan
-Route::resource('mahasiswas', MahasiswaController::class);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/tentang', [TentangController::class, 'index'])->name('tentang');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// -- RUTE MAHASISWA KEMARIN YANG SUDAH DIBERI PROTEKSI LOGIN --
+Route::resource('mahasiswas', MahasiswaController::class)
+    ->middleware('auth');
+
+require __DIR__.'/auth.php';

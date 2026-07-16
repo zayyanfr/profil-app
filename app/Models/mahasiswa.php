@@ -16,6 +16,7 @@ class Mahasiswa extends Model
         'email',
         'github',
         'bio',
+        'user_id',
     ];
 
     // Konversi tipe data secara otomatis saat diakses oleh Laravel

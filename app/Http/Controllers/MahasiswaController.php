@@ -29,7 +29,8 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Menampung hasil validasi ke dalam variabel $validated
+        $validated = $request->validate([
             'nama'     => 'required|string|max:100',
             'nim'      => 'required|string|unique:mahasiswas,nim',
             'prodi'    => 'required|string|max:100',
@@ -39,7 +40,10 @@ class MahasiswaController extends Controller
             'bio'      => 'nullable|string|max:500',
         ]);
 
-        Mahasiswa::create($request->validated());
+        // Menambahkan user_id dari user yang sedang login
+        $validated['user_id'] = auth()->id();
+
+        Mahasiswa::create($validated);
 
         return redirect()->route('mahasiswas.index')
                          ->with('success', 'Mahasiswa berhasil ditambahkan!');
@@ -58,9 +62,13 @@ class MahasiswaController extends Controller
      */
     public function edit($id)
     {
-        // Cari data mahasiswa berdasarkan ID, jika tidak ketemu otomatis tampilkan error 404
         $mahasiswa = Mahasiswa::findOrFail($id);
-        
+
+        // Hanya pemilik data yang boleh akses halaman edit
+        if ($mahasiswa->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki izin untuk mengedit data ini.');
+        }
+
         return view('mahasiswas.edit', compact('mahasiswa'));
     }
 
@@ -71,7 +79,7 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
 
-        // PASTIKAN ada tulisan "$validatedData =" di awal baris ini!
+        // Menampung hasil validasi ke variabel $validatedData
         $validatedData = $request->validate([
             'nama'     => 'required|string|max:100',
             'nim'      => 'required|string|unique:mahasiswas,nim,' . $id,
@@ -82,10 +90,9 @@ class MahasiswaController extends Controller
             'bio'      => 'nullable|string|max:500',
         ]);
 
-        // Simpan pembaruan data
+        // Simpan pembaruan data (Kode update milik Anda kemarin)
         $mahasiswa->update($validatedData);
 
-        // Redirect ke daftar mahasiswa dengan flash message sukses
         return redirect()->route('mahasiswas.index')
                          ->with('success', "Data {$mahasiswa->nama} berhasil diperbarui!");
     }
@@ -95,16 +102,10 @@ class MahasiswaController extends Controller
      */
     public function destroy($id)
     {
-        // Cari data mahasiswa berdasarkan ID
         $mahasiswa = Mahasiswa::findOrFail($id);
-        
-        // Simpan nama terlebih dahulu sebelum data dihapus dari database
         $nama = $mahasiswa->nama; 
-        
-        // Proses hapus dari database SQLite
         $mahasiswa->delete();
 
-        // Redirect kembali ke halaman utama dengan flash message sukses
         return redirect()->route('mahasiswas.index')
                          ->with('success', "Data $nama berhasil dihapus.");
     }
